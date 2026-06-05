@@ -1,6 +1,6 @@
-# CMS Video App
+# CMS Video App · 跨平台视频播放器
 
-基于 uni-app 的 Apple CMS 视频客户端，支持多源切换、分类浏览、m3u8 播放、倍速控制、播放记录和收藏。
+> 基于 uni-app / Vue3 的免费 Apple CMS 视频客户端，支持 m3u8/HLS 播放、多源切换、倍速、收藏、历史记录。
 
 ## 功能
 
