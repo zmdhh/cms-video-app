@@ -1,0 +1,9 @@
+{
+  "name": "apple-cms-app",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "artplayer": "^5.2.5",
+    "hls.js": "^1.6.10"
+  }
+}
