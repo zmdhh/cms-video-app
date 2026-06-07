@@ -12,6 +12,7 @@
         <view class="rate-btn" v-for="r in rates" :key="r.value"
           :class="{active:rate===r.value}" @tap="setRate(r.value)">{{ r.label }}</view>
       </view>
+      <view class="rate-btn ext" @tap="openExternal">外部播放器</view>
     </view>
 
     <video
@@ -91,6 +92,25 @@ export default {
       const ctx = uni.createVideoContext('playVideo')
       if (ctx) { try { ctx.playbackRate(Number(val)) } catch(e) {} }
     },
+    openExternal() {
+      const url = this.curUrl
+      if (!url) return
+      // #ifdef APP-PLUS
+      try {
+        const Intent = plus.android.importClass('android.content.Intent')
+        const Uri = plus.android.importClass('android.net.Uri')
+        const intent = new Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(Uri.parse(url), 'video/*')
+        intent.addFlags(0x10000000)
+        plus.android.runtimeMainActivity().startActivity(intent)
+      } catch(e) {
+        plus.runtime.openURL(url)
+      }
+      // #endif
+      // #ifndef APP-PLUS
+      window.open(url)
+      // #endif
+    },
     onPlay() {},
     onError(e) {},
     onFs(e) { this.fullscreen = e.detail.fullScreen },
@@ -161,6 +181,7 @@ export default {
 .rate-options{display:flex;gap:10rpx}
 .rate-btn{padding:2rpx 14rpx;border-radius:4rpx;font-size:20rpx;color:#aaa;background:#222}
 .rate-btn.active{background:#22c55e;color:#fff}
+.rate-btn.ext{margin-left:auto;background:#2563eb;color:#fff}
 .video{width:100%;height:420rpx;background:#000}
 .episodes-panel{padding:24rpx;background:#111}
 .panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20rpx}

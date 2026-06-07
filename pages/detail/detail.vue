@@ -63,7 +63,8 @@
       </view>
 
       <view class="play-main" v-if="currentEpisodes.urls.length > 0">
-        <button class="btn-play" @tap="playEpisode(0)">立即播放</button>
+        <button class="btn-play" @tap="playEpisode(0)">内置播放</button>
+        <button class="btn-ext" @tap="openExternal">外部播放器</button>
       </view>
     </view>
 
@@ -151,6 +152,23 @@ function playEpisode(index) {
   uni.navigateTo({
     url: `/pages/play/play?${params.join('&')}`
   })
+}
+
+function openExternal() {
+  const url = currentEpisodes.value.urls[0]
+  if (!url) return
+  // #ifdef APP-PLUS
+  try {
+    const Intent = plus.android.importClass('android.content.Intent')
+    const Uri = plus.android.importClass('android.net.Uri')
+    const intent = new Intent(Intent.ACTION_VIEW)
+    intent.setDataAndType(Uri.parse(url), 'video/*')
+    intent.addFlags(0x10000000)
+    plus.android.runtimeMainActivity().startActivity(intent)
+  } catch(e) {
+    plus.runtime.openURL(url)
+  }
+  // #endif
 }
 </script>
 
@@ -278,6 +296,20 @@ function playEpisode(index) {
   width: 100%;
   height: 80rpx;
   background: #22c55e;
+  color: #fff;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  margin-bottom: 16rpx;
+}
+.btn-ext {
+  width: 100%;
+  height: 80rpx;
+  background: #2563eb;
   color: #fff;
   border-radius: 12rpx;
   font-size: 30rpx;
