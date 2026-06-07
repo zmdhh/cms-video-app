@@ -6,11 +6,11 @@
       <text class="ep-info" v-if="epTotal">{{ epIdx + 1 }}/{{ epTotal }}</text>
     </view>
 
-    <view class="rate-bar" v-if="!fullscreen">
+    <view class="rate-bar">
       <text class="rate-label">倍速</text>
       <view class="rate-options">
         <view class="rate-btn" v-for="r in rates" :key="r.value"
-          :class="{active:rate===r.value}" @tap="rate=r.value">{{ r.label }}</view>
+          :class="{active:rate===r.value}" @tap="setRate(r.value)">{{ r.label }}</view>
       </view>
     </view>
 
@@ -57,7 +57,7 @@ export default {
         { label: '1x', value: 1 }, { label: '1.25x', value: 1.25 },
         { label: '1.5x', value: 1.5 }, { label: '2x', value: 2 }
       ],
-      saveTimer: null, currentTime: 0, videoCtx: null
+      saveTimer: null, currentTime: 0
     }
   },
   computed: {
@@ -83,17 +83,16 @@ export default {
 
     this.restoreProgress()
   },
-  watch: {
-    rate(val) {
-      if (this.videoCtx) this.videoCtx.playbackRate(val)
-    }
-  },
   mounted() { this.startSaveTimer() },
-  onReady() { this.videoCtx = uni.createVideoContext('playVideo') },
   onUnload() { this.stopSaveTimer(); this.saveHistory() },
   methods: {
+    setRate(val) {
+      this.rate = val
+      const ctx = uni.createVideoContext('playVideo')
+      if (ctx) { try { ctx.playbackRate(Number(val)) } catch(e) {} }
+    },
     onPlay() {},
-    onError() {},
+    onError(e) {},
     onFs(e) { this.fullscreen = e.detail.fullScreen },
     onEnded() { this.saveHistory(); if (this.epIdx < this.epTotal - 1) this.epIdx++ },
     onTime(e) { if (e.detail && e.detail.currentTime) this.currentTime = e.detail.currentTime },
@@ -157,7 +156,7 @@ export default {
 .back-icon{font-size:48rpx;color:#22c55e;line-height:1}
 .nav-title{flex:1;font-size:26rpx;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ep-info{font-size:22rpx;color:#888}
-.rate-bar{display:flex;align-items:center;padding:8rpx 24rpx;background:#1a1a1a;gap:16rpx}
+.rate-bar{display:flex;align-items:center;padding:8rpx 24rpx;background:#1a1a1a;gap:16rpx;z-index:10}
 .rate-label{font-size:22rpx;color:#888;flex-shrink:0}
 .rate-options{display:flex;gap:10rpx}
 .rate-btn{padding:2rpx 14rpx;border-radius:4rpx;font-size:20rpx;color:#aaa;background:#222}
