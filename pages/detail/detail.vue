@@ -63,8 +63,7 @@
       </view>
 
       <view class="play-main" v-if="currentEpisodes.urls.length > 0">
-        <button class="btn-play" @tap="playEpisode(0)">内置播放</button>
-        <button class="btn-h5" @tap="openH5Player">H5增强播放</button>
+        <button class="btn-play" @tap="playEpisode(0)">H5增强播放</button>
         <button class="btn-ext" @tap="openExternal">外部播放器</button>
       </view>
     </view>
@@ -140,28 +139,12 @@ function switchSource(key) {
 function playEpisode(index) {
   const ep = currentEpisodes.value
   if (!ep.urls[index]) return
-  const params = [
-    `id=${detail.value.id}`,
-    `title=${encodeURIComponent(detail.value.title)}`,
-    `poster=${encodeURIComponent(detail.value.poster)}`,
-    `episode=${index}`,
-    `total=${ep.urls.length}`,
-    `currentSource=${encodeURIComponent(currentSource.value)}`
-  ]
-  uni.setStorageSync('player_episodes', JSON.stringify(allEpisodes.value))
-  uni.setStorageSync('player_current_source', currentSource.value)
-  uni.navigateTo({
-    url: `/pages/play/play?${params.join('&')}`
-  })
-}
-
-function openH5Player() {
-  const url = currentEpisodes.value.urls[0]
-  if (!url) return
   uni.setStorageSync('h5_player_data', JSON.stringify({
-    url: url,
+    url: ep.urls[index],
     title: detail.value?.title || '',
-    poster: detail.value?.poster || ''
+    poster: detail.value?.poster || '',
+    urls: ep.urls,
+    titles: ep.titles
   }))
   uni.navigateTo({ url: '/pages/play-h5/play-h5' })
 }
@@ -308,20 +291,6 @@ function openExternal() {
   width: 100%;
   height: 80rpx;
   background: #22c55e;
-  color: #fff;
-  border-radius: 12rpx;
-  font-size: 30rpx;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  margin-bottom: 16rpx;
-}
-.btn-h5 {
-  width: 100%;
-  height: 80rpx;
-  background: #a855f7;
   color: #fff;
   border-radius: 12rpx;
   font-size: 30rpx;

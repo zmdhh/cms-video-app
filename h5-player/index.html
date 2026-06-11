@@ -55,11 +55,23 @@ function init() {
   storedPoster = decodeURIComponent(getParam('poster') || '')
   document.getElementById('vidTitle').textContent = storedTitle || 'Video Player'
 
-  if (!storedUrl) {
+  var epData = getParam('eps')
+  if (epData) {
+    try {
+      var eps = JSON.parse(decodeURIComponent(epData))
+      if (eps.u && eps.t) {
+        for (var i = 0; i < eps.u.length; i++) {
+          episodes.push({ url: eps.u[i], title: eps.t[i] || ('第'+(i+1)+'集') })
+        }
+      }
+    } catch(e) {}
+  }
+
+  if (!storedUrl && episodes.length === 0) {
     document.getElementById('status').textContent = '无效播放地址'
     return
   }
-  createPlayer(storedUrl, storedTitle, storedPoster)
+  createPlayer(storedUrl || episodes[0].url, storedTitle, storedPoster)
 }
 
 var CustomLoader = (function() {
@@ -132,7 +144,10 @@ function createPlayer(url, title, poster) {
 
 function toggleEp() { document.getElementById('epPanel').classList.toggle('show') }
 
-function closePlayer() { history.back(); window.close() }
+function closePlayer() {
+  try { uni.postMessage({ data: { close: true } }) } catch(e) {}
+  history.back()
+}
 
 init()
 </script>

@@ -1,13 +1,6 @@
 <template>
-  <view class="container" v-if="url">
-    <view class="close-btn" @tap="goBack">✕</view>
-    <!-- #ifdef APP-PLUS -->
-    <web-view :src="url" @message="onMsg"></web-view>
-    <!-- #endif -->
-    <!-- #ifdef H5 -->
-    <iframe :src="url" style="width:100%;height:100%;border:none"></iframe>
-    <!-- #endif -->
-  </view>
+  <web-view v-if="url" :src="url" @message="onMsg" style="width:100%;height:100vh"></web-view>
+  <view v-else class="loading"><text>加载中...</text></view>
 </template>
 
 <script>
@@ -20,21 +13,25 @@ export default {
     if (raw) {
       try {
         const data = JSON.parse(raw)
+        const eps = data.urls && data.titles ? { u: data.urls, t: data.titles } : null
         const params = '?url=' + encodeURIComponent(data.url || '') +
           '&title=' + encodeURIComponent(data.title || '') +
           '&poster=' + encodeURIComponent(data.poster || '')
-        this.url = '/static/player/index.html' + params
+        const epsStr = eps ? '&eps=' + encodeURIComponent(JSON.stringify(eps)) : ''
+        this.url = '/static/player/index.html' + params + epsStr
       } catch(e) {}
     }
   },
   methods: {
-    goBack() { uni.navigateBack() },
-    onMsg(e) {}
+    onMsg(e) {
+      if (e.detail && e.detail.data && e.detail.data.close) {
+        uni.navigateBack()
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
-.container{width:100%;height:100vh;position:relative}
-.close-btn{position:fixed;top:20rpx;right:20rpx;z-index:999;width:56rpx;height:56rpx;background:rgba(0,0,0,0.6);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28rpx}
+.loading{display:flex;justify-content:center;padding-top:200rpx;color:#888;font-size:28rpx}
 </style>
