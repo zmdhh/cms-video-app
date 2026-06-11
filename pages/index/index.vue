@@ -48,11 +48,6 @@
         {{ total > 0 ? `加载更多 (已加载${allVideos.length}/共${total}条)` : '加载更多' }}
       </text>
     </view>
-      <text v-if="loading">加载中...</text>
-      <text v-else @tap="loadMore">
-        {{ total > 0 ? `加载更多 (已加载${allVideos.length}/共${total}条)` : '加载更多' }}
-      </text>
-    </view>
 
     <view class="back-top" v-if="showBackTop" @tap="scrollToTop">▲</view>
   </view>
