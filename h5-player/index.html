@@ -196,6 +196,9 @@ function createPlayer(url, title, poster) {
   })
   art.on('ready', function() { document.getElementById('status').classList.remove('show') })
   art.on('error', function() { document.getElementById('status').textContent = '播放错误' })
+  art.on('fullscreen', function(state) {
+    try { uni.postMessage({ data: state ? { landscape: true } : { portrait: true } }) } catch(e) {}
+  })
 }
 
 function toggleEp() { document.getElementById('epPanel').classList.toggle('show') }

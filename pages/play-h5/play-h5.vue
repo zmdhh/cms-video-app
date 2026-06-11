@@ -24,10 +24,20 @@ export default {
   },
   methods: {
     onMsg(e) {
-      if (e.detail && e.detail.data && e.detail.data.close) {
-        uni.navigateBack()
+      if (e.detail && e.detail.data) {
+        var d = e.detail.data
+        if (d.close) uni.navigateBack()
+        // #ifdef APP-PLUS
+        if (d.landscape) plus.screen.lockOrientation('landscape')
+        if (d.portrait) plus.screen.lockOrientation('portrait')
+        // #endif
       }
     }
+  },
+  onUnload() {
+    // #ifdef APP-PLUS
+    plus.screen.lockOrientation('portrait')
+    // #endif
   }
 }
 </script>
