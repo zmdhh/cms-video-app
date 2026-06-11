@@ -78,11 +78,11 @@ var CustomLoader = (function() {
   var Base = Hls.DefaultConfig.loader
   function C(cfg) { Base.call(this, cfg); var load = this.load.bind(this)
     this.load = function(ctx, cfg, cb) {
-      if (ctx.type === 'manifest' || ctx.type === 'level') {
+      if ((ctx.type === 'manifest' || ctx.type === 'level') && blockAd) {
         var onSuccess = cb.onSuccess
         cb.onSuccess = function(res, stats, ctx) {
           if (res.data && typeof res.data === 'string')
-            res.data = res.data.split('\n').filter(function(l) { return l.indexOf('#EXT-X-DISCONTINUITY') === -1 }).join('\n')
+            res.data = filterAds(res.data)
           return onSuccess(res, stats, ctx, null)
         }
       }
@@ -90,6 +90,62 @@ var CustomLoader = (function() {
     }
   }; C.prototype = Object.create(Base.prototype); C.prototype.constructor = C; return C
 })()
+
+function filterAds(data) {
+  var lines = data.split('\n')
+  var groups = []
+  var cur = { segs: [], count: 0, lines: [], isAd: false }
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i]
+    if (line.indexOf('#EXTINF') === 0) {
+      cur.segs.push({ extinf: line, ts: lines[i+1] || '' })
+      cur.count++
+      i++
+    } else if (line.indexOf('#EXT-X-DISCONTINUITY') === 0) {
+      if (cur.count > 0) { groups.push(cur); cur = { segs: [], count: 0, lines: [], isAd: false } }
+    } else if (line.indexOf('#EXT') === 0 || line.indexOf('#') === 0) {
+      cur.lines.push(line)
+    }
+  }
+  if (cur.count > 0) groups.push(cur)
+
+  // Mark short groups as ads (< 15 segments ~= 30s)
+  var maxSeg = 0
+  for (var g = 0; g < groups.length; g++) {
+    if (groups[g].count > maxSeg) maxSeg = groups[g].count
+  }
+  for (var g = 0; g < groups.length; g++) {
+    groups[g].isAd = groups[g].count < 15 && groups[g].count < maxSeg * 0.3
+  }
+
+  // Rebuild: keep header lines + non-ad segments
+  var out = []
+  var writtenSegs = false
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i]
+    if (line.indexOf('#EXTINF') === 0) {
+      var ts = lines[i+1] || ''
+      var inAd = false
+      for (var g = 0; g < groups.length; g++) {
+        for (var s = 0; s < groups[g].segs.length; s++) {
+          if (groups[g].segs[s].extinf === line && groups[g].segs[s].ts === ts) {
+            inAd = groups[g].isAd
+            break
+          }
+        }
+        if (inAd) break
+      }
+      if (!inAd) { out.push(line); out.push(ts); writtenSegs = true }
+      i++
+    } else if (line.indexOf('#EXT-X-DISCONTINUITY') === 0) {
+      // skip
+    } else {
+      out.push(line)
+    }
+  }
+  return out.join('\n')
+}
 
 function createPlayer(url, title, poster) {
   document.getElementById('status').classList.add('show')
