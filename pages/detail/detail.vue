@@ -177,16 +177,11 @@ function openH5Player() {
   if (!url) return
   const title = detail.value ? detail.value.title : ''
   const poster = detail.value ? detail.value.poster : ''
-  const h5Url = 'https://zmdhh.github.io/cms-video-app/h5-player/?' +
-    'url=' + encodeURIComponent(url) +
-    '&title=' + encodeURIComponent(title) +
-    '&poster=' + encodeURIComponent(poster)
-  // #ifdef APP-PLUS
-  plus.runtime.openURL(h5Url)
-  // #endif
-  // #ifndef APP-PLUS
-  window.open(h5Url)
-  // #endif
+  uni.navigateTo({
+    url: '/pages/play-h5/play-h5?url=' + encodeURIComponent(url) +
+      '&title=' + encodeURIComponent(title) +
+      '&poster=' + encodeURIComponent(poster)
+  })
 }
 </script>
 

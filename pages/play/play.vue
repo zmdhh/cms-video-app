@@ -112,15 +112,11 @@ export default {
     openH5Player() {
       const url = this.curUrl
       if (!url) return
-      const h5Url = 'https://zmdhh.github.io/cms-video-app/h5-player/?' +
-        'url=' + encodeURIComponent(url) +
-        '&title=' + encodeURIComponent(this.srcTitle || '')
-      // #ifdef APP-PLUS
-      plus.runtime.openURL(h5Url)
-      // #endif
-      // #ifndef APP-PLUS
-      window.open(h5Url)
-      // #endif
+      uni.navigateTo({
+        url: '/pages/play-h5/play-h5?url=' + encodeURIComponent(url) +
+          '&title=' + encodeURIComponent(this.srcTitle || '') +
+          '&poster=' + encodeURIComponent('')
+      })
     },
     onPlay() {},
     onError(e) {},
