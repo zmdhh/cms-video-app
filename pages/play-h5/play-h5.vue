@@ -26,6 +26,11 @@ export default {
         this.url = '/static/player/index.html' + params + epsStr
       } catch(e) {}
     }
+  },
+  onUnload() {
+    // #ifdef APP-PLUS
+    plus.screen.lockOrientation('portrait')
+    // #endif
   }
 }
 </script>
