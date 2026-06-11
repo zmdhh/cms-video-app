@@ -21,7 +21,9 @@
     <view class="grid" v-if="list.length > 0">
       <view class="card" v-for="item in list" :key="item.id">
         <image class="poster" :src="item.poster" mode="aspectFill" @tap="goDetail(item)" />
-        <view class="fav-btn" @tap.stop="toggleFav(item)">{{ isFav(item) ? '★' : '☆' }}</view>
+        <view class="fav-btn" @tap.stop="currentType==='_hist' ? delHistory(item) : toggleFav(item)">
+          {{ currentType==='_hist' ? '✕' : (isFav(item) ? '★' : '☆') }}
+        </view>
         <view class="card-info" @tap="goDetail(item)">
           <text class="title">{{ item.title }}</text>
           <view class="meta">
@@ -36,7 +38,16 @@
       <text>{{ currentType ? '该分类暂无数据，切推荐查看更多' : '暂无数据，请检查接口设置' }}</text>
     </view>
 
+    <view class="clear-bar" v-if="currentType === '_hist' && list.length > 0">
+      <text class="clear-btn" @tap="clearHistory">清空历史</text>
+    </view>
+
     <view class="load-more" v-if="list.length > 0 && hasMore && currentType !== '_fav' && currentType !== '_hist'">
+      <text v-if="loading">加载中...</text>
+      <text v-else @tap="loadMore">
+        {{ total > 0 ? `加载更多 (已加载${allVideos.length}/共${total}条)` : '加载更多' }}
+      </text>
+    </view>
       <text v-if="loading">加载中...</text>
       <text v-else @tap="loadMore">
         {{ total > 0 ? `加载更多 (已加载${allVideos.length}/共${total}条)` : '加载更多' }}
@@ -70,9 +81,10 @@ const list = computed(() => {
 const favIds = ref([])
 try { favIds.value = uni.getStorageSync('fav_ids') || [] } catch(e) {}
 
-const histVideos = computed(() => {
-  try { return (uni.getStorageSync('history_list') || []).map(h => ({ ...h, poster: '', remarks: '', typeName: '' })) } catch(e) { return [] }
-})
+const histVideos = ref([])
+function loadHist() {
+  try { histVideos.value = uni.getStorageSync('history_list') || [] } catch(e) { histVideos.value = [] }
+}
 
 let tabHandler = null
 
@@ -133,7 +145,8 @@ function loadPage(p) {
 function switchType(id) {
   if (id === currentType.value) return
   currentType.value = id
-  if (id === '_fav' || id === '_hist') return
+  if (id === '_fav') return
+  if (id === '_hist') { loadHist(); return }
   allVideos.value = []
   page.value = 1
   hasMore.value = true
@@ -153,6 +166,26 @@ function toggleFav(item) {
 
 function goDetail(item) {
   uni.navigateTo({ url: `/pages/detail/detail?id=${item.id}&title=${encodeURIComponent(item.title)}` })
+}
+
+function delHistory(item) {
+  var list = uni.getStorageSync('history_list') || []
+  list = list.filter(function(h) { return h.id !== item.id })
+  uni.setStorageSync('history_list', list)
+  loadHist()
+}
+
+function clearHistory() {
+  uni.showModal({
+    title: '确认清空',
+    content: '确定删除所有历史记录？',
+    success: function(res) {
+      if (res.confirm) {
+        uni.setStorageSync('history_list', [])
+        loadHist()
+      }
+    }
+  })
 }
 </script>
 
@@ -304,5 +337,13 @@ function goDetail(item) {
   justify-content: center;
   font-size: 36rpx;
   z-index: 99;
+}
+.clear-bar {
+  text-align: right;
+  padding: 10rpx 20rpx;
+}
+.clear-btn {
+  color: #ef4444;
+  font-size: 26rpx;
 }
 </style>
