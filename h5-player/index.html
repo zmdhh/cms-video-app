@@ -33,7 +33,6 @@ body{background:#000;overflow:hidden;font-family:-apple-system,BlinkMacSystemFon
 <div class="toolbar" id="toolbar">
   <span class="title" id="vidTitle">Loading...</span>
   <button class="btn btn-red" onclick="closePlayer()">←退出</button>
-  <button class="btn btn-gray" id="adBtn" onclick="toggleAd()">AD:ON</button>
   <button class="btn btn-gray" onclick="toggleEp()">📋选集</button>
 </div>
 
@@ -91,6 +90,23 @@ function createPlayer(url, title, poster) {
     lock: true, fastForward: true, autoPlayback: true,
     theme: '#22c55e', lang: 'zh-cn',
     moreVideoAttr: { crossOrigin: 'anonymous' },
+    settings: [{
+      html: '去广告',
+      icon: '<text x="50%" y="50%" font-size="14" font-weight="bold" text-anchor="middle" dominant-baseline="middle" fill="#ffffff">AD</text>',
+      tooltip: blockAd ? '已开启' : '已关闭',
+      onClick: function() {
+        blockAd = !blockAd
+        if (art && storedUrl) {
+          var el = document.getElementById('player')
+          while (el.firstChild) el.removeChild(el.firstChild)
+          if (art.video && art.video.hls) art.video.hls.destroy()
+          try { art.destroy(false) } catch(e) {}
+          art = null
+          setTimeout(function() { createPlayer(storedUrl, storedTitle, storedPoster) }, 200)
+        }
+        return blockAd ? '已开启' : '已关闭'
+      }
+    }],
     customType: { m3u8: function(video, url) {
       if (video.hls) video.hls.destroy()
       var hls = new Hls({
@@ -115,20 +131,6 @@ function createPlayer(url, title, poster) {
 }
 
 function toggleEp() { document.getElementById('epPanel').classList.toggle('show') }
-
-function toggleAd() {
-  blockAd = !blockAd
-  document.getElementById('adBtn').textContent = 'AD:' + (blockAd ? 'ON' : 'OFF')
-  document.getElementById('adBtn').className = blockAd ? 'btn btn-gray' : 'btn btn-red'
-  if (art && storedUrl) {
-    var el = document.getElementById('player')
-    while (el.firstChild) el.removeChild(el.firstChild)
-    if (art.video && art.video.hls) art.video.hls.destroy()
-    try { art.destroy(false) } catch(e) {}
-    art = null
-    setTimeout(function() { createPlayer(storedUrl, storedTitle, storedPoster) }, 300)
-  }
-}
 
 function closePlayer() { history.back(); window.close() }
 
