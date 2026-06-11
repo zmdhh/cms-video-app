@@ -64,7 +64,6 @@
 
       <view class="play-main" v-if="currentEpisodes.urls.length > 0">
         <button class="btn-play" @tap="playEpisode(0)">内置播放</button>
-        <button class="btn-h5" @tap="openH5Player">H5增强播放</button>
         <button class="btn-ext" @tap="openExternal">外部播放器</button>
       </view>
     </view>
@@ -172,16 +171,6 @@ function openExternal() {
   // #endif
 }
 
-function openH5Player() {
-  const url = currentEpisodes.value.urls[0]
-  if (!url) return
-  const title = detail.value ? detail.value.title : ''
-  const poster = detail.value ? detail.value.poster : ''
-  uni.navigateTo({
-    url: '/pages/play-h5/play-h5?url=' + encodeURIComponent(url) +
-      '&title=' + encodeURIComponent(title) +
-      '&poster=' + encodeURIComponent(poster)
-  })
 }
 </script>
 
