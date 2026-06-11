@@ -31,6 +31,11 @@ export default {
     // #ifdef APP-PLUS
     plus.screen.lockOrientation('portrait')
     // #endif
+  },
+  onHide() {
+    // #ifdef APP-PLUS
+    plus.screen.lockOrientation('portrait')
+    // #endif
   }
 }
 </script>

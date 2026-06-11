@@ -2,6 +2,9 @@
 export default {
   onLaunch() {
     console.log('App launched')
+    // #ifdef APP-PLUS
+    plus.screen.lockOrientation('portrait')
+    // #endif
   }
 }
 </script>
