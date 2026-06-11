@@ -4,8 +4,8 @@
       <scroll-view scroll-x class="scroll-x">
         <view class="cate-list">
           <view class="cate-item" :class="{ active: currentType === '' }" @tap="switchType('')">推荐</view>
-          <view class="cate-item" :class="{ active: currentType === '_fav' }" @tap="switchType('_fav')">⭐收藏</view>
-          <view class="cate-item" :class="{ active: currentType === '_hist' }" @tap="switchType('_hist')">🕐历史</view>
+          <view class="cate-item" :class="{ active: currentType === '_fav' }" @tap="switchType('_fav')">★收藏</view>
+          <view class="cate-item" :class="{ active: currentType === '_hist' }" @tap="switchType('_hist')">◷历史</view>
           <view class="cate-split">|</view>
           <view
             class="cate-item"
@@ -21,7 +21,7 @@
     <view class="grid" v-if="list.length > 0">
       <view class="card" v-for="item in list" :key="item.id">
         <image class="poster" :src="item.poster" mode="aspectFill" @tap="goDetail(item)" />
-        <view class="fav-btn" @tap.stop="toggleFav(item)">{{ isFav(item) ? '❤️' : '🤍' }}</view>
+        <view class="fav-btn" @tap.stop="toggleFav(item)">{{ isFav(item) ? '★' : '☆' }}</view>
         <view class="card-info" @tap="goDetail(item)">
           <text class="title">{{ item.title }}</text>
           <view class="meta">
@@ -213,9 +213,10 @@ function goDetail(item) {
   position: absolute;
   top: 8rpx;
   right: 8rpx;
-  font-size: 32rpx;
+  font-size: 36rpx;
   z-index: 2;
   padding: 4rpx;
+  color: #f59e0b;
 }
 .card-info {
   padding: 12rpx 16rpx;

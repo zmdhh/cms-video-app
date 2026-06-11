@@ -146,6 +146,21 @@ function playEpisode(index) {
     urls: ep.urls,
     titles: ep.titles
   }))
+  // Save history
+  var hItem = {
+    id: detail.value?.id || '',
+    title: detail.value?.title || '',
+    epIdx: index, epTotal: ep.urls.length,
+    time: 0, curSrc: currentSource.value,
+    saveTime: Date.now()
+  }
+  var hList = uni.getStorageSync('history_list') || []
+  var hIdx = hList.findIndex(function(h) { return h.id === hItem.id })
+  if (hIdx >= 0) hList.splice(hIdx, 1)
+  hList.unshift(hItem)
+  if (hList.length > 100) hList.length = 100
+  uni.setStorageSync('history_list', hList)
+  // Navigate
   uni.navigateTo({ url: '/pages/play-h5/play-h5' })
 }
 
