@@ -64,6 +64,7 @@
 
       <view class="play-main" v-if="currentEpisodes.urls.length > 0">
         <button class="btn-play" @tap="playEpisode(0)">内置播放</button>
+        <button class="btn-h5" @tap="openH5Player">H5增强播放</button>
         <button class="btn-ext" @tap="openExternal">外部播放器</button>
       </view>
     </view>
@@ -168,6 +169,23 @@ function openExternal() {
   } catch(e) {
     plus.runtime.openURL(url)
   }
+  // #endif
+}
+
+function openH5Player() {
+  const url = currentEpisodes.value.urls[0]
+  if (!url) return
+  const title = detail.value ? detail.value.title : ''
+  const poster = detail.value ? detail.value.poster : ''
+  const h5Url = 'https://zmdhh.github.io/cms-video-app/h5-player/?' +
+    'url=' + encodeURIComponent(url) +
+    '&title=' + encodeURIComponent(title) +
+    '&poster=' + encodeURIComponent(poster)
+  // #ifdef APP-PLUS
+  plus.runtime.openURL(h5Url)
+  // #endif
+  // #ifndef APP-PLUS
+  window.open(h5Url)
   // #endif
 }
 </script>
@@ -318,6 +336,21 @@ function openExternal() {
   align-items: center;
   justify-content: center;
   border: none;
+  margin-bottom: 16rpx;
+}
+.btn-h5 {
+  width: 100%;
+  height: 80rpx;
+  background: #a855f7;
+  color: #fff;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  margin-bottom: 16rpx;
 }
 .empty {
   text-align: center;

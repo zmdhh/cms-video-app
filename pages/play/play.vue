@@ -13,6 +13,7 @@
           :class="{active:rate===r.value}" @tap="setRate(r.value)">{{ r.label }}</view>
       </view>
       <view class="rate-btn ext" @tap="openExternal">外部播放器</view>
+      <view class="rate-btn h5" @tap="openH5Player">H5</view>
     </view>
 
     <video
@@ -107,8 +108,18 @@ export default {
         plus.runtime.openURL(url)
       }
       // #endif
+    },
+    openH5Player() {
+      const url = this.curUrl
+      if (!url) return
+      const h5Url = 'https://zmdhh.github.io/cms-video-app/h5-player/?' +
+        'url=' + encodeURIComponent(url) +
+        '&title=' + encodeURIComponent(this.srcTitle || '')
+      // #ifdef APP-PLUS
+      plus.runtime.openURL(h5Url)
+      // #endif
       // #ifndef APP-PLUS
-      window.open(url)
+      window.open(h5Url)
       // #endif
     },
     onPlay() {},
@@ -182,6 +193,7 @@ export default {
 .rate-btn{padding:2rpx 14rpx;border-radius:4rpx;font-size:20rpx;color:#aaa;background:#222}
 .rate-btn.active{background:#22c55e;color:#fff}
 .rate-btn.ext{margin-left:auto;background:#2563eb;color:#fff}
+.rate-btn.h5{background:#a855f7;color:#fff}
 .video{width:100%;height:420rpx;background:#000}
 .episodes-panel{padding:24rpx;background:#111}
 .panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20rpx}
