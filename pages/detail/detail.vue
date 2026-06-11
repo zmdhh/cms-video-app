@@ -170,8 +170,6 @@ function openExternal() {
   }
   // #endif
 }
-
-}
 </script>
 
 <style scoped>

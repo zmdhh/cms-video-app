@@ -23,10 +23,10 @@ export default {
       '&title=' + encodeURIComponent(title) +
       '&poster=' + encodeURIComponent(poster)
     // #ifdef APP-PLUS
-    this.url = '/static/h5/index.html' + params
+    this.url = '/static/player/index.html' + params
     // #endif
     // #ifdef H5
-    this.url = '/static/h5/index.html' + params
+    this.url = '/static/player/index.html' + params
     // #endif
   },
   methods: {
