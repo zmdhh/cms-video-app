@@ -42,8 +42,7 @@
         "navigationBarBackgroundColor": "#000000",
         "navigationBarTextStyle": "white",
         "app-plus": {
-          "titleNView": false,
-          "pageOrientation": "landscape"
+          "titleNView": false
         }
       }
     },

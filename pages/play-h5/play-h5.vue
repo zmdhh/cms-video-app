@@ -9,6 +9,11 @@ export default {
     return { url: '' }
   },
   onLoad() {
+    // #ifdef APP-PLUS
+    setTimeout(function() {
+      plus.screen.lockOrientation('landscape')
+    }, 300)
+    // #endif
     const raw = uni.getStorageSync('h5_player_data')
     if (raw) {
       try {
