@@ -221,6 +221,9 @@ function toggleAd() {
 }
 
 function closePlayer() {
+  // #ifdef APP-PLUS
+  uni.postMessage({ data: 'close' })
+  // #endif
   try { window.close() } catch(e) {}
   history.back()
 }
