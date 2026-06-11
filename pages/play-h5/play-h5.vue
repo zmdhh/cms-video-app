@@ -23,7 +23,7 @@ export default {
       '&title=' + encodeURIComponent(title) +
       '&poster=' + encodeURIComponent(poster)
     // #ifdef APP-PLUS
-    this.url = 'https://zmdhh.github.io/cms-video-app/h5-player/' + params
+    this.url = '/static/h5/index.html' + params
     // #endif
     // #ifdef H5
     this.url = '/static/h5/index.html' + params
