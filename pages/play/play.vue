@@ -112,10 +112,10 @@ export default {
     openH5Player() {
       const url = this.curUrl
       if (!url) return
-      uni.navigateTo({
-        url: '/pages/play-h5/play-h5?url=' + encodeURIComponent(url) +
-          '&title=' + encodeURIComponent(this.srcTitle || '')
-      })
+      uni.setStorageSync('h5_player_data', JSON.stringify({
+        url: url, title: this.srcTitle || '', poster: ''
+      }))
+      uni.navigateTo({ url: '/pages/play-h5/play-h5' })
     },
     onPlay() {},
     onError(e) {},

@@ -158,11 +158,12 @@ function playEpisode(index) {
 function openH5Player() {
   const url = currentEpisodes.value.urls[0]
   if (!url) return
-  uni.navigateTo({
-    url: '/pages/play-h5/play-h5?url=' + encodeURIComponent(url) +
-      '&title=' + encodeURIComponent(detail.value?.title || '') +
-      '&poster=' + encodeURIComponent(detail.value?.poster || '')
-  })
+  uni.setStorageSync('h5_player_data', JSON.stringify({
+    url: url,
+    title: detail.value?.title || '',
+    poster: detail.value?.poster || ''
+  }))
+  uni.navigateTo({ url: '/pages/play-h5/play-h5' })
 }
 
 function openExternal() {
