@@ -12,7 +12,8 @@
         <view class="rate-btn" v-for="r in rates" :key="r.value"
           :class="{active:rate===r.value}" @tap="setRate(r.value)">{{ r.label }}</view>
       </view>
-      <view class="rate-btn ext" @tap="openExternal">外部播放器</view>
+      <view class="rate-btn ext" @tap="openExternal">外部播放</view>
+      <view class="rate-btn h5" @tap="openH5Player">H5增强</view>
     </view>
 
     <video
@@ -107,6 +108,14 @@ export default {
         plus.runtime.openURL(url)
       }
       // #endif
+    },
+    openH5Player() {
+      const url = this.curUrl
+      if (!url) return
+      uni.navigateTo({
+        url: '/pages/play-h5/play-h5?url=' + encodeURIComponent(url) +
+          '&title=' + encodeURIComponent(this.srcTitle || '')
+      })
     },
     onPlay() {},
     onError(e) {},
