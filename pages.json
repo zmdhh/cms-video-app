@@ -27,6 +27,28 @@
     {
       "path": "pages/play/play",
       "style": {
+        "navigationBarTitleText": "播放",
+        "navigationBarBackgroundColor": "#000000",
+        "navigationBarTextStyle": "white",
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
+      "path": "pages/play-h5/play-h5",
+      "style": {
+        "navigationBarTitleText": "H5增强播放",
+        "navigationBarBackgroundColor": "#000000",
+        "navigationBarTextStyle": "white",
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
+      "path": "pages/search/search",
+      "style": {
         "navigationBarTitleText": "搜索"
       }
     },
