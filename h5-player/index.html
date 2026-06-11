@@ -69,6 +69,7 @@ class CustomLoader extends Hls.DefaultConfig.loader {
 
 let art = null, blockAd = true
 let episodes = [], curIdx = 0
+let storedUrl = '', storedTitle = '', storedPoster = ''
 
 // --- Init ---
 function getParam(name) {
@@ -77,12 +78,12 @@ function getParam(name) {
 }
 
 function init() {
-  const url = getParam('url')
-  const title = decodeURIComponent(getParam('title') || '')
-  const poster = decodeURIComponent(getParam('poster') || '')
+  storedUrl = getParam('url')
+  storedTitle = decodeURIComponent(getParam('title') || '')
+  storedPoster = decodeURIComponent(getParam('poster') || '')
   const epData = getParam('eps')
 
-  document.getElementById('vidTitle').textContent = title || 'Video Player'
+  document.getElementById('vidTitle').textContent = storedTitle || 'Video Player'
 
   if (epData) {
     try {
@@ -96,15 +97,15 @@ function init() {
     } catch(e) {}
   }
 
-  if (!url && episodes.length === 0) {
+  if (!storedUrl && episodes.length === 0) {
     document.getElementById('status').textContent = '无效播放地址'
     document.getElementById('status').classList.add('show')
     return
   }
 
-  const playUrl = url || (episodes[0] && episodes[0].url) || ''
+  const playUrl = storedUrl || (episodes[0] && episodes[0].url) || ''
 
-  createPlayer(playUrl, title, poster)
+  createPlayer(playUrl, storedTitle, storedPoster)
 }
 
 function createPlayer(url, title, poster) {
@@ -204,10 +205,18 @@ function switchEp(i) {
 function toggleAd() {
   blockAd = !blockAd
   document.getElementById('adBtn').textContent = 'AD:' + (blockAd ? 'ON' : 'OFF')
-  const url = art ? art.url : ''
-  if (art && url) {
-    art.destroy()
-    createPlayer(url, getParam('title'), getParam('poster'))
+  document.getElementById('adBtn').className = blockAd ? 'btn btn-gray' : 'btn btn-red'
+  if (art && storedUrl) {
+    const target = document.getElementById('player')
+    if (target) {
+      while (target.firstChild) target.removeChild(target.firstChild)
+    }
+    if (art.video && art.video.hls) {
+      art.video.hls.destroy()
+    }
+    try { art.destroy(false) } catch(e) {}
+    art = null
+    setTimeout(() => createPlayer(storedUrl, storedTitle, storedPoster), 300)
   }
 }
 
