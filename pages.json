@@ -38,11 +38,12 @@
     {
       "path": "pages/play-h5/play-h5",
       "style": {
-        "navigationBarTitleText": "H5增强播放",
+        "navigationBarTitleText": "",
         "navigationBarBackgroundColor": "#000000",
         "navigationBarTextStyle": "white",
         "app-plus": {
-          "titleNView": false
+          "titleNView": false,
+          "pageOrientation": "landscape"
         }
       }
     },
