@@ -28,8 +28,20 @@ export default {
         this.url = '/static/player/index.html' + params + epsStr
       } catch(e) {}
     }
+    var self = this
+    this._checkTimer = setInterval(function() {
+      try {
+        if (plus.storage.getItem('__exit_player__') === '1') {
+          plus.storage.removeItem('__exit_player__')
+          clearInterval(self._checkTimer)
+          uni.navigateBack()
+        }
+      } catch(e) {}
+    }, 300)
   },
   onUnload() {
+    if (this._checkTimer) clearInterval(this._checkTimer)
+    try { plus.storage.removeItem('__exit_player__') } catch(e) {}
     // #ifdef APP-PLUS
     plus.screen.lockOrientation('portrait')
     // #endif
