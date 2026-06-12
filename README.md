@@ -34,22 +34,43 @@
 ## 项目结构
 
 ```
-├── App.vue                    # 全局入口
+├── App.vue                    # 全局入口 + 自动更新检查
 ├── main.js                    # Vue 实例
 ├── manifest.json              # App 配置
 ├── pages.json                 # 路由 + TabBar
 ├── pages/
-│   ├── index/index.vue        # 首页（分类 + 视频列表 + 收藏/历史入口）
-│   ├── detail/detail.vue      # 详情（封面/简介/选集/线路切换）
-│   ├── play/play.vue          # 播放（倍速/自动续播/进度保存）
+│   ├── index/index.vue        # 首页（分类 + 视频列表 + 收藏/历史）
+│   ├── detail/detail.vue      # 详情（封面/简介/选集/线路切换/播放）
+│   ├── play/play.vue          # 内置播放（原生 video，保留）
+│   ├── play-h5/play-h5.vue    # H5增强播放（ArtPlayer + hls.js）
 │   ├── search/search.vue      # 搜索
-│   ├── config/config.vue      # 设置（多源管理/广告过滤）
+│   ├── config/config.vue      # 设置（多源管理/广告过滤/检查更新）
 │   ├── fav/index.vue          # 收藏页
 │   └── hist/index.vue         # 历史记录页
+├── static/player/             # H5播放器（离线包）
+│   ├── index.html             # 播放器页面
+│   ├── artplayer.js           # ArtPlayer 库
+│   └── hls.min.js             # hls.js 库
+├── h5-player/                 # H5播放器（GitHub Pages用）
 └── utils/
-    ├── api.js                 # Apple CMS API 封装 + m3u8 解析
+    ├── api.js                 # Apple CMS API 封装 + 多源管理 + m3u8 解析
     └── player-utils.js        # hls.js 自定义加载器 + 广告过滤
 ```
+
+## 功能
+
+- **多源管理** — 添加/切换/编辑 Apple CMS 接口
+- **分类浏览** — 自动获取分类，选中分类加载视频，下拉分页
+- **搜索引擎** — 关键词搜索，历史记录
+- **H5增强播放** — ArtPlayer + hls.js，内嵌 App 不跳出浏览器
+- **智能去广告** — 自动检测短分段（<15段≈30秒）并删除
+- **倍速控制** — 0.5x ~ 2x，H5播放器自带
+- **全屏横屏** — 播放页自动转横屏，退出恢复竖屏
+- **播放历史** — 自动保存进度，断点续播，30天自动清理
+- **收藏管理** — 一键收藏，收藏页查看
+- **外部播放器** — 调用系统播放器（MX Player/VLC等）
+- **自动更新** — 启动时检查 GitHub Releases 新版本
+- **跨平台** — App（Android/iOS）/ H5 多端运行
 
 ## 接口说明
 
@@ -71,7 +92,7 @@
 - 使用者需遵守当地法律法规，自行承担使用风险
 - 请在下载后 24 小时内删除
 
-## 已知限制
+## 版更说明
 
-- 播放页广告过滤依赖 `plus.io` API（仅 App 端支持）
-- 部分 API 仅返回首页视频，分类需服务端支持 `t` 参数
+每次发布新版本时，在 GitHub Release 创建新 tag（如 `v1.0.2`）并上传 APK，App 启动时自动检测更新提示用户。
+
