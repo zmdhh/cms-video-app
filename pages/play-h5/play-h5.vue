@@ -26,8 +26,18 @@ export default {
         this.url = '/static/player/index.html' + params + epsStr
       } catch(e) {}
     }
+    var self = this
+    this._checkTimer = setInterval(function() {
+      if (localStorage.getItem('__exit_player__') === '1') {
+        localStorage.removeItem('__exit_player__')
+        clearInterval(self._checkTimer)
+        uni.navigateBack()
+      }
+    }, 300)
   },
   onUnload() {
+    if (this._checkTimer) clearInterval(this._checkTimer)
+    localStorage.removeItem('__exit_player__')
     // #ifdef APP-PLUS
     plus.screen.lockOrientation('portrait')
     // #endif
@@ -36,9 +46,6 @@ export default {
     // #ifdef APP-PLUS
     plus.screen.lockOrientation('portrait')
     // #endif
-  },
-  methods: {
-    goBack() { uni.navigateBack() }
   }
 }
 </script>
