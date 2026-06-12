@@ -1,8 +1,8 @@
 {
     "name" : "爱电影",
     "appid" : "__UNI__480600D",
-    "versionName" : "1.0.0",
-    "versionCode" : "100",
+    "versionName" : "1.0.1",
+    "versionCode" : "101",
     "transformPx" : false,
     "app-plus" : {
         "usingComponents" : true,
