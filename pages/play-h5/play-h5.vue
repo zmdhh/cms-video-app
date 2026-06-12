@@ -44,11 +44,6 @@ export default {
     plus.screen.lockOrientation('portrait')
     // #endif
   },
-  onHide() {
-    // #ifdef APP-PLUS
-    plus.screen.lockOrientation('portrait')
-    // #endif
-  },
   onBackPress() {
     // #ifdef APP-PLUS
     plus.screen.lockOrientation('portrait')
