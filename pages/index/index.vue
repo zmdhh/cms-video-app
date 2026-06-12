@@ -78,7 +78,14 @@ try { favIds.value = uni.getStorageSync('fav_ids') || [] } catch(e) {}
 
 const histVideos = ref([])
 function loadHist() {
-  try { histVideos.value = uni.getStorageSync('history_list') || [] } catch(e) { histVideos.value = [] }
+  try {
+    var list = uni.getStorageSync('history_list') || []
+    var cutoff = Date.now() - 30 * 24 * 3600 * 1000
+    list = list.filter(function(h) { return h.saveTime > cutoff })
+    if (list.length > 50) list.length = 50
+    histVideos.value = list
+    uni.setStorageSync('history_list', list)
+  } catch(e) { histVideos.value = [] }
 }
 
 let tabHandler = null

@@ -158,7 +158,7 @@ function playEpisode(index) {
   var hIdx = hList.findIndex(function(h) { return h.id === hItem.id })
   if (hIdx >= 0) hList.splice(hIdx, 1)
   hList.unshift(hItem)
-  if (hList.length > 100) hList.length = 100
+  if (hList.length > 50) hList.length = 50
   uni.setStorageSync('history_list', hList)
   // Navigate
   uni.navigateTo({ url: '/pages/play-h5/play-h5' })
