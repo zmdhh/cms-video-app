@@ -32,6 +32,7 @@ body{background:#000;overflow:hidden;font-family:-apple-system,BlinkMacSystemFon
 
 <div class="toolbar" id="toolbar">
   <span class="title" id="vidTitle">Loading...</span>
+  <button class="btn btn-red" onclick="closePlayer()">‹ 返回</button>
   <button class="btn btn-gray" onclick="toggleEp()">📋选集</button>
 </div>
 
@@ -204,6 +205,10 @@ function createPlayer(url, title, poster) {
 }
 
 function toggleEp() { document.getElementById('epPanel').classList.toggle('show') }
+
+function closePlayer() {
+  try { plus.webview.currentWebview().close('auto') } catch(e) {}
+}
 
 init()
 </script>
