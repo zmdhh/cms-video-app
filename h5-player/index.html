@@ -175,6 +175,13 @@ function createPlayer(url, title, poster) {
         return blockAd ? '已开启' : '已关闭'
       }
     }],
+    controls: [{
+      position: 'left',
+      html: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2"><path d="M19 12H5m0 0l7 7m-7-7l7-7"/></svg>',
+      tooltip: '返回',
+      index: 5,
+      click: function() { plus.storage.setItem('__exit_player__', '1') }
+    }],
     customType: { m3u8: function(video, url) {
       if (video.hls) video.hls.destroy()
       var hls = new Hls({
