@@ -88,11 +88,12 @@
     <view class="card">
       <view class="card-title">关于</view>
       <view class="info-row">
-        <text>Apple CMS 视频客户端 v1.0</text>
+        <text>CMS Video App v1.0</text>
       </view>
       <view class="info-row">
-        <text>ArtPlayer + hls.js · 多源自由切换</text>
+        <text>ArtPlayer + hls.js · 多源</text>
       </view>
+      <button class="btn btn-update" @tap="checkUpdate">检查更新</button>
     </view>
   </view>
 </template>
@@ -183,6 +184,48 @@ function toggleHideParent(e) {
   uni.setStorageSync('hide_parent_categories', e.detail.value)
 }
 
+function checkUpdate() {
+  // #ifdef APP-PLUS
+  uni.showLoading({ title: '检查中...' })
+  uni.request({
+    url: 'https://api.github.com/repos/zmdhh/cms-video-app/releases/latest',
+    timeout: 10000,
+    success: (res) => {
+      uni.hideLoading()
+      try {
+        const tag = res.data.tag_name || ''
+        const newVer = tag.replace(/^v/, '')
+        const curVer = plus.runtime.version
+        const apk = (res.data.assets || []).find(a => a.name && a.name.endsWith('.apk'))
+        if (apk && newVer !== curVer) {
+          uni.showModal({
+            title: '发现新版本 ' + tag + ' (当前' + curVer + ')',
+            content: '是否下载更新？',
+            confirmText: '更新',
+            cancelText: '取消',
+            success: (r) => {
+              if (r.confirm) {
+                const dtask = plus.downloader.createDownload(apk.browser_download_url, {}, (d, s) => {
+                  if (s === 200) { plus.runtime.install(d.filename) } else { uni.showToast({ title: '下载失败', icon: 'none' }) }
+                })
+                dtask.start()
+                uni.showToast({ title: '后台下载中...', icon: 'none' })
+              }
+            }
+          })
+        } else {
+          uni.showToast({ title: '已是最新版本', icon: 'none' })
+        }
+      } catch(e) { uni.hideLoading() }
+    },
+    fail: () => { uni.hideLoading(); uni.showToast({ title: '检查失败', icon: 'none' }) }
+  })
+  // #endif
+  // #ifndef APP-PLUS
+  uni.showToast({ title: '仅App端支持', icon: 'none' })
+  // #endif
+}
+
 function testConnection() {
   testing.value = true
   testResult.value = ''
@@ -231,6 +274,7 @@ function testConnection() {
 .btn-outline { background: transparent; border: 1px solid #22c55e; color: #22c55e; }
 .btn-test { width: 100%; height: 72rpx; background: #2563eb; color: #fff; border-radius: 12rpx; font-size: 28rpx; display: flex; align-items: center; justify-content: center; border: none; margin-top: 16rpx; }
 .btn-test[disabled] { opacity: 0.5; }
+.btn-update { width: 100%; height: 72rpx; background: #6366f1; color: #fff; border-radius: 12rpx; font-size: 28rpx; display: flex; align-items: center; justify-content: center; border: none; margin-top: 16rpx; }
 .hint { font-size: 24rpx; color: #888; margin-top: 16rpx; }
 .result { margin-top: 20rpx; padding: 16rpx; border-radius: 8rpx; font-size: 26rpx; }
 .result.ok { background: rgba(34,197,94,0.1); color: #22c55e; }
