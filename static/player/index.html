@@ -8,7 +8,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
 #player{width:100vw;height:100vh}
-.toolbar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;padding:8px 12px;background:rgba(0,0,0,0.8);gap:8px;flex-wrap:wrap}
+.toolbar{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;align-items:center;padding:8px 12px;background:rgba(0,0,0,0.85);gap:8px;flex-wrap:wrap}
 .toolbar .title{color:#fff;font-size:14px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:80px}
 .btn{padding:6px 14px;border-radius:6px;font-size:13px;border:none;cursor:pointer;color:#fff;white-space:nowrap}
 .btn-red{background:#ef4444}
@@ -207,8 +207,9 @@ function createPlayer(url, title, poster) {
 function toggleEp() { document.getElementById('epPanel').classList.toggle('show') }
 
 function closePlayer() {
-  try { uni.postMessage({ data: { close: true } }) } catch(e) {}
+  window.postMessage(JSON.stringify({ close: true }), '*')
   history.back()
+  window.close()
 }
 
 init()
