@@ -179,7 +179,7 @@ function createPlayer(url, title, poster) {
       if (video.hls) video.hls.destroy()
       var hls = new Hls({
         debug: false, enableWorker: true, lowLatencyMode: true,
-        maxBufferLength: 30, backBufferLength: 30, maxBufferSize: 60*1000*1000,
+        maxBufferLength: 120, backBufferLength: 60, maxBufferSize: 300*1000*1000,
         loader: blockAd ? CustomLoader : Hls.DefaultConfig.loader
       })
       hls.loadSource(url); hls.attachMedia(video); video.hls = hls
