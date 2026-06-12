@@ -32,7 +32,6 @@ body{background:#000;overflow:hidden;font-family:-apple-system,BlinkMacSystemFon
 
 <div class="toolbar" id="toolbar">
   <span class="title" id="vidTitle">Loading...</span>
-  <button class="btn btn-red" onclick="closePlayer()">←退出</button>
   <button class="btn btn-gray" onclick="toggleEp()">📋选集</button>
 </div>
 
@@ -181,8 +180,8 @@ function createPlayer(url, title, poster) {
       tooltip: '退出',
       index: 20,
       click: function() {
-        try { window.postMessage(JSON.stringify({ close: true }), '*') } catch(e) {}
-        history.back()
+        try { plus.key.fireEvent('backbutton', {}) } catch(e) {}
+        try { history.back() } catch(e2) {}
       }
     }],
     customType: { m3u8: function(video, url) {
@@ -215,15 +214,6 @@ function createPlayer(url, title, poster) {
 }
 
 function toggleEp() { document.getElementById('epPanel').classList.toggle('show') }
-
-function closePlayer() {
-  try {
-    plus.webview.currentWebview().close()
-  } catch(e) {
-    try { window.close() } catch(e2) {}
-    try { history.back() } catch(e3) {}
-  }
-}
 
 init()
 </script>
