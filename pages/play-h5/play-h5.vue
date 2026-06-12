@@ -28,16 +28,18 @@ export default {
     }
     var self = this
     this._checkTimer = setInterval(function() {
-      if (plus.storage.getItem('__exit_player__') === '1') {
-        plus.storage.removeItem('__exit_player__')
-        clearInterval(self._checkTimer)
-        uni.navigateBack()
-      }
+      try {
+        if (plus.storage.getItem('__exit_player__') === '1') {
+          plus.storage.removeItem('__exit_player__')
+          clearInterval(self._checkTimer)
+          uni.navigateBack()
+        }
+      } catch(e) {}
     }, 300)
   },
   onUnload() {
     if (this._checkTimer) clearInterval(this._checkTimer)
-    localStorage.removeItem('__exit_player__')
+    try { plus.storage.removeItem('__exit_player__') } catch(e) {}
     // #ifdef APP-PLUS
     plus.screen.lockOrientation('portrait')
     // #endif
