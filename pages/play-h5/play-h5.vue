@@ -28,8 +28,8 @@ export default {
     }
     var self = this
     this._checkTimer = setInterval(function() {
-      if (localStorage.getItem('__exit_player__') === '1') {
-        localStorage.removeItem('__exit_player__')
+      if (plus.storage.getItem('__exit_player__') === '1') {
+        plus.storage.removeItem('__exit_player__')
         clearInterval(self._checkTimer)
         uni.navigateBack()
       }
@@ -46,6 +46,12 @@ export default {
     // #ifdef APP-PLUS
     plus.screen.lockOrientation('portrait')
     // #endif
+  },
+  onBackPress() {
+    // #ifdef APP-PLUS
+    plus.screen.lockOrientation('portrait')
+    // #endif
+    return false
   }
 }
 </script>

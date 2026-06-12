@@ -207,7 +207,7 @@ function createPlayer(url, title, poster) {
 function toggleEp() { document.getElementById('epPanel').classList.toggle('show') }
 
 function closePlayer() {
-  localStorage.setItem('__exit_player__', '1')
+  plus.storage.setItem('__exit_player__', '1')
 }
 
 init()
