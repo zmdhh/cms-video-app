@@ -217,9 +217,12 @@ function createPlayer(url, title, poster) {
 function toggleEp() { document.getElementById('epPanel').classList.toggle('show') }
 
 function closePlayer() {
-  window.postMessage(JSON.stringify({ close: true }), '*')
-  history.back()
-  window.close()
+  try {
+    plus.webview.currentWebview().close()
+  } catch(e) {
+    try { window.close() } catch(e2) {}
+    try { history.back() } catch(e3) {}
+  }
 }
 
 init()
