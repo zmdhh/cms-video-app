@@ -55,7 +55,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { onPullDownRefresh, onReachBottom, onPageScroll } from '@dcloudio/uni-app'
+import { onPullDownRefresh, onReachBottom, onPageScroll, onShow } from '@dcloudio/uni-app'
 import { fetchCategories, fetchVideoList } from '@/utils/api.js'
 
 const categories = ref([])
@@ -98,6 +98,19 @@ onMounted(() => {
 })
 
 onUnmounted(() => { if (tabHandler) uni.$off('index_switch', tabHandler) })
+
+onShow(() => {
+  if (uni.getStorageSync('source_changed') === '1') {
+    uni.removeStorageSync('source_changed')
+    categories.value = []
+    allVideos.value = []
+    currentType.value = ''
+    page.value = 1
+    hasMore.value = true
+    loadCategories()
+    loadPage(1)
+  }
+})
 
 function loadCategories() {
   fetchCategories().then(data => {

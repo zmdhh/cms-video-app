@@ -125,6 +125,7 @@ onMounted(() => {
 function activateSource(id) {
   setActiveSource(id)
   sources.value = getSources()
+  uni.setStorageSync('source_changed', '1')
   uni.showToast({ title: '已切换数据源', icon: 'success' })
 }
 
