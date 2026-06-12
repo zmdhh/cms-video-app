@@ -35,6 +35,11 @@ export default {
           plus.storage.removeItem('__exit_player__')
           clearInterval(self._checkTimer)
           uni.navigateBack()
+          return
+        }
+        if (plus.storage.getItem('__video_vertical__') === '1') {
+          plus.storage.removeItem('__video_vertical__')
+          plus.screen.lockOrientation('portrait')
         }
       } catch(e) {}
     }, 300)
@@ -42,6 +47,7 @@ export default {
   onUnload() {
     if (this._checkTimer) clearInterval(this._checkTimer)
     try { plus.storage.removeItem('__exit_player__') } catch(e) {}
+    try { plus.storage.removeItem('__video_vertical__') } catch(e) {}
     // #ifdef APP-PLUS
     plus.screen.lockOrientation('portrait')
     // #endif

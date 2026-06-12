@@ -204,6 +204,11 @@ function createPlayer(url, title, poster) {
           }
         }
       })
+      video.addEventListener('loadedmetadata', function() {
+        if (video.videoHeight > video.videoWidth) {
+          plus.storage.setItem('__video_vertical__', '1')
+        }
+      })
     }}
   })
   art.on('ready', function() {
